@@ -12,10 +12,12 @@ class Main(Window):
         Window.__init__(self)
         self.salt = b'O\x18\xdd\xb2\xf3\xaa\x11e\xfc\xd4\xf6=J\x0f\x85\xb5'
         self.debug = True
+
     def run_win(self):
         self.create_widgets()
         self.connect_buttons_commands()
         self.win.mainloop()
+
     def create_key(self, text):
         password_provided = self.get_password(title="enter Secret Key", text=text)
         password = password_provided.encode()
@@ -27,6 +29,7 @@ class Main(Window):
             backend=default_backend()
         )
         self.key = base64.urlsafe_b64encode(kdf.derive(password))
+
     def encrypt_file(self):
         self.create_key(text="Enter a secret key to encrypt the file (Save it to decrypt it later)")
         self.get_file("Select a File to Encrypt")
@@ -36,9 +39,10 @@ class Main(Window):
         encrypted_data = fernet.encrypt(data)
         self.get_file_save_dist(title="Save Encrypted File", extensions=(("Encrypted Files", "*.encrypted"),
                                                                          ("All Files", "*.*")))
-        with open(self.dist_file + ".encrypted", "wb") as encrypted_file:
+        with open(self.dist_file + os.path.splitext(self.dist_file)[-1], "wb") as encrypted_file:
             encrypted_file.write(encrypted_data)
         self.show_msg(title="File saved", text=f"File saved at {self.dist_file}.encrypted")
+
     def decrypt_file(self):
         self.create_key(text="Enter a secret key to decrypt the file")
         self.get_file("Select a File to Decrypt")
@@ -51,10 +55,12 @@ class Main(Window):
             self.show_msg(title="Wrong Key", text="The key given is not correct, try again")
             return
         self.get_file_save_dist(title="Save Decrypted File", extensions=(("Decrypted Files", "*.decrypted"),
+                                                                         ("Text", "*.txt"),
                                                                          ("All Files", "*.*")))
-        with open(self.dist_file + ".decrypted", "wb") as decrypted_file:
+        with open(self.dist_file + os.path.splitext(self.dist_file)[-1], "wb") as decrypted_file:
             decrypted_file.write(decrypted_data)
         self.show_msg(title="File saved", text=f"File saved at {self.dist_file}.decrypted")
+
     def encrypt_text(self):
         text = self.text_box.get("1.0", "end")
         if text == "":
@@ -66,9 +72,10 @@ class Main(Window):
         encrypted_data = fernet.encrypt(encoded_text)
         self.get_file_save_dist(title="Save Encrypted File", extensions=(("Encrypted Files", "*.encrypted"),
                                                                          ("All Files", "*.*")))
-        with open(self.dist_file + ".encrypted", "wb") as encrypted_file:
+        with open(self.dist_file + os.path.splitext(self.dist_file)[-1], "wb") as encrypted_file:
             encrypted_file.write(encrypted_data)
         self.show_msg(title="File saved", text=f"File saved at {self.dist_file}.encrypted")
+
     def decrypt_text(self):
         text = self.text_box.get("1.0", "end")
         if text == "":
@@ -85,9 +92,10 @@ class Main(Window):
 
         self.get_file_save_dist(title="Save Encrypted File", extensions=(("decrypted Files", "*.decrypted"),
                                                                          ("All Files", "*.*")))
-        with open(self.dist_file + ".decrypted", "wb") as decrypted_file:
+        with open(self.dist_file + os.path.splitext(self.dist_file)[-1], "wb") as decrypted_file:
             decrypted_file.write(decrypted_data)
         self.show_msg(title="File saved", text=f"File saved at {self.dist_file}.decrypted")
+
     def connect_buttons_commands(self):
         if self.debug:
             self.encrypt_file_button.config(command=self.encrypt_file)
@@ -101,5 +109,6 @@ class Main(Window):
 def main():
     main = Main()
     main.run_win()
+
 if __name__ == '__main__':
     main()

@@ -16,12 +16,16 @@ class Window():
         self.encrypt_decrypt_text_label.place(x=320, y=160)
         self.text_box = tk.Text(height=24, width=50, font=("Roboto Light", 12))
         self.text_box.place(x=320, y=200)
-        self.encrypt_text = tk.Button(text="Encrypt", font=("Roboto Light", 12), height=4, width=12)
-        self.encrypt_text.place(x=580, y=680)
-        self.decrypt_text = tk.Button(text="Decrypt", font=("Roboto Light", 12), height=4, width=12)
-        self.decrypt_text.place(x=420, y=680)
+        self.encrypt_text_button = tk.Button(text="Encrypt", font=("Roboto Light", 12), height=4, width=12)
+        self.encrypt_text_button.place(x=580, y=680)
+        self.decrypt_text_button = tk.Button(text="Decrypt", font=("Roboto Light", 12), height=4, width=12)
+        self.decrypt_text_button.place(x=420, y=680)
     def get_file(self, title):
         self.file = filedialog.askopenfilename(title=title, initialdir="/", multiple=False)
+    def show_msg(self, title, text):
+        pyautogui.alert(title=title, text=text)
+    def get_file_save_dist(self, title, extensions):
+        self.dist_file = filedialog.asksaveasfilename(title=title, filetypes=extensions)
     def get_password(self, title, text):
         result = pyautogui.password(title=title, text=text)
         return result

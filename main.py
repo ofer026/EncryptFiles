@@ -1,3 +1,6 @@
+# The main script of the Encryptor
+# author: Ofer026
+
 from Window.window import Window
 import base64
 import os
@@ -63,7 +66,7 @@ class Main(Window):
 
     def encrypt_text(self):
         text = self.text_box.get("1.0", "end")
-        if text == "":
+        if text == "\n":
             self.show_msg(title="Error!", text="No text to encrypt was given")
             return
         self.create_key(text="Enter a create a secret key to encrypt the text (save it to decrypt it later)")
@@ -72,13 +75,17 @@ class Main(Window):
         encrypted_data = fernet.encrypt(encoded_text)
         self.get_file_save_dist(title="Save Encrypted File", extensions=(("Encrypted Files", "*.encrypted"),
                                                                          ("All Files", "*.*")))
-        with open(self.dist_file + os.path.splitext(self.dist_file)[-1], "wb") as encrypted_file:
-            encrypted_file.write(encrypted_data)
+        try:
+            with open(self.dist_file + os.path.splitext(self.dist_file)[-1], "wb") as encrypted_file:
+                encrypted_file.write(encrypted_data)
+        except FileNotFoundError:
+            self.show_msg(title="ERROR!", text="Error while saving file")
+            return
         self.show_msg(title="File saved", text=f"File saved at {self.dist_file}.encrypted")
 
     def decrypt_text(self):
         text = self.text_box.get("1.0", "end")
-        if text == "":
+        if text == "\n":
             self.show_msg(title="Error!", text="No text to decrypt was given")
             return
         self.create_key(text="Enter a create a secret key to decrypt the text")

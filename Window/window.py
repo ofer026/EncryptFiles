@@ -22,7 +22,7 @@ class Window():
         # -------- Setting up objects for other functions -------
         self.file = None
         self.dist_file = None
-        
+
     def create_widgets(self):
         self.encrypt_file_label = tk.Label(text="Encrypt/decrypt files:", font=("Roboto Light", 18))
         self.encrypt_file_label.place(x=50, y=22)
@@ -42,7 +42,7 @@ class Window():
     def get_file(self, title):
         self.file = filedialog.askopenfilename(title=title, initialdir="/", multiple=False)
 
-    def show_msg(self, title, text):
+    def show_msg(self, title="", text=""):
         pyautogui.alert(title=title, text=text)
 
     def get_file_save_dist(self, title, extensions):
@@ -51,6 +51,10 @@ class Window():
     def get_password(self, title, text):
         result = pyautogui.password(title=title, text=text)
         return result
+
+    def display_question(self, title, text, buttons):
+        ans = pyautogui.confirm(title=title, text=text, buttons=buttons)
+        return ans
 
     def run(self):
         self.win.mainloop()

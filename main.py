@@ -89,6 +89,9 @@ class Main(Window):
         encoded_text = text.encode()
         fernet = Fernet(self.key)
         encrypted_data = fernet.encrypt(encoded_text)
+        answer = self.display_question(title="Display Text",
+                                       text="Do you want to display the data or only save it on a file?",
+                                       buttons=["Display", "Only save on file"])
         self.get_file_save_dist(title="Save Encrypted File", extensions=(("Encrypted Files", "*.encrypted"),
                                                                          ("All Files", "*.*")))
         try:
@@ -97,6 +100,8 @@ class Main(Window):
         except FileNotFoundError:
             self.show_msg(title="ERROR!", text="Error while saving file")
             return
+        if answer == "Display":
+            self.show_msg(title="", text=f"The encrypted data is {encrypted_data}")
         self.show_msg(title="File saved", text=f"File saved at {self.dist_file}.encrypted")
 
     def decrypt_text(self):
@@ -112,7 +117,9 @@ class Main(Window):
         except cryptography.fernet.InvalidToken:
             self.show_msg(title="Wrong Key", text="The key given is not correct, try again")
             return
-
+        answer = self.display_question(title="Display Text",
+                                       text="Do you want to display the data or only save it on a file?",
+                                       buttons=["Display", "Only save on file"])
         self.get_file_save_dist(title="Save Encrypted File", extensions=(("decrypted Files", "*.decrypted"),
                                                                          ("All Files", "*.*")))
         try:
@@ -121,6 +128,8 @@ class Main(Window):
         except FileNotFoundError:
             self.show_msg(title="Error!", text="No text to decrypt was given")
             return
+        if answer == "Display":
+            self.show_msg(title="", text=f"The decrypted data is {decrypted_data}")
         self.show_msg(title="File saved", text=f"File saved at {self.dist_file}.decrypted")
 
     def connect_buttons_commands(self):

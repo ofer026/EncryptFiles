@@ -36,8 +36,12 @@ class Main(Window):
     def encrypt_file(self):
         self.create_key(text="Enter a secret key to encrypt the file (Save it to decrypt it later)")
         self.get_file("Select a File to Encrypt")
-        with open(self.file, "rb") as file:
-            data = file.read()
+        try:
+            with open(self.file, "rb") as file:
+                data = file.read()
+        except FileNotFoundError:
+            self.show_msg(title="ERROR!", text="Error while opening and reading file")
+            return
         fernet = Fernet(self.key)
         encrypted_data = fernet.encrypt(data)
         self.get_file_save_dist(title="Save Encrypted File", extensions=(("Encrypted Files", "*.encrypted"),
@@ -47,13 +51,18 @@ class Main(Window):
                 encrypted_file.write(encrypted_data)
         except FileNotFoundError:
             self.show_msg(title="Error!", text="No text to decrypt was given")
+            return
         self.show_msg(title="File saved", text=f"File saved at {self.dist_file}.encrypted")
 
     def decrypt_file(self):
         self.create_key(text="Enter a secret key to decrypt the file")
         self.get_file("Select a File to Decrypt")
-        with open(self.file, "rb") as file:
-            data = file.read()
+        try:
+            with open(self.file, "rb") as file:
+                data = file.read()
+        except FileNotFoundError:
+            self.show_msg(title="ERROR!", text="Error while opening and reading file")
+            return
         fernet = Fernet(self.key)
         try:
             decrypted_data = fernet.decrypt(data)
@@ -68,6 +77,7 @@ class Main(Window):
                 decrypted_file.write(decrypted_data)
         except FileNotFoundError:
             self.show_msg(title="Error!", text="No text to decrypt was given")
+            return
         self.show_msg(title="File saved", text=f"File saved at {self.dist_file}.decrypted")
 
     def encrypt_text(self):

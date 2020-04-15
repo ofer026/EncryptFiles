@@ -42,8 +42,11 @@ class Main(Window):
         encrypted_data = fernet.encrypt(data)
         self.get_file_save_dist(title="Save Encrypted File", extensions=(("Encrypted Files", "*.encrypted"),
                                                                          ("All Files", "*.*")))
-        with open(self.dist_file + os.path.splitext(self.dist_file)[-1], "wb") as encrypted_file:
-            encrypted_file.write(encrypted_data)
+        try:
+            with open(self.dist_file + os.path.splitext(self.dist_file)[-1], "wb") as encrypted_file:
+                encrypted_file.write(encrypted_data)
+        except FileNotFoundError:
+            self.show_msg(title="Error!", text="No text to decrypt was given")
         self.show_msg(title="File saved", text=f"File saved at {self.dist_file}.encrypted")
 
     def decrypt_file(self):
@@ -60,8 +63,11 @@ class Main(Window):
         self.get_file_save_dist(title="Save Decrypted File", extensions=(("Decrypted Files", "*.decrypted"),
                                                                          ("Text", "*.txt"),
                                                                          ("All Files", "*.*")))
-        with open(self.dist_file + os.path.splitext(self.dist_file)[-1], "wb") as decrypted_file:
-            decrypted_file.write(decrypted_data)
+        try:
+            with open(self.dist_file + os.path.splitext(self.dist_file)[-1], "wb") as decrypted_file:
+                decrypted_file.write(decrypted_data)
+        except FileNotFoundError:
+            self.show_msg(title="Error!", text="No text to decrypt was given")
         self.show_msg(title="File saved", text=f"File saved at {self.dist_file}.decrypted")
 
     def encrypt_text(self):
@@ -99,8 +105,12 @@ class Main(Window):
 
         self.get_file_save_dist(title="Save Encrypted File", extensions=(("decrypted Files", "*.decrypted"),
                                                                          ("All Files", "*.*")))
-        with open(self.dist_file + os.path.splitext(self.dist_file)[-1], "wb") as decrypted_file:
-            decrypted_file.write(decrypted_data)
+        try:
+            with open(self.dist_file + os.path.splitext(self.dist_file)[-1], "wb") as decrypted_file:
+                decrypted_file.write(decrypted_data)
+        except FileNotFoundError:
+            self.show_msg(title="Error!", text="No text to decrypt was given")
+            return
         self.show_msg(title="File saved", text=f"File saved at {self.dist_file}.decrypted")
 
     def connect_buttons_commands(self):
